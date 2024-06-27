@@ -1,6 +1,26 @@
+// src/browser.ts
 import puppeteer from "puppeteer";
-import { getCache, setCache } from "./helpers";
-class Browser {
+
+// src/helpers.ts
+import { createClient } from "redis";
+import * as dotenv from "dotenv";
+dotenv.config();
+var url = process.env.REDIS_URL;
+var client = createClient({ url });
+async function setCache(key, value) {
+  await client.connect();
+  await client.set(key, value);
+  await client.disconnect();
+}
+async function getCache(key) {
+  await client.connect();
+  let value = await client.get(key);
+  await client.disconnect();
+  return value;
+}
+
+// src/browser.ts
+var Browser = class {
   browser;
   async create() {
     let max_attempt = 2;
@@ -76,8 +96,7 @@ class Browser {
       }
     } while (attempts < max_attempt);
   }
-}
+};
 export {
   Browser as default
 };
-//# sourceMappingURL=browser.js.map

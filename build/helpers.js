@@ -1,8 +1,9 @@
+// src/helpers.ts
 import { createClient } from "redis";
 import * as dotenv from "dotenv";
 dotenv.config();
-const url = process.env.REDIS_URL;
-const client = createClient({ url });
+var url = process.env.REDIS_URL;
+var client = createClient({ url });
 async function setCache(key, value) {
   await client.connect();
   await client.set(key, value);
@@ -18,4 +19,3 @@ export {
   getCache,
   setCache
 };
-//# sourceMappingURL=helpers.js.map

@@ -1,8 +1,9 @@
+// src/scraper.ts
 import * as dotenv from "dotenv";
 import axios from "axios";
 import fs from "fs";
 dotenv.config();
-class Scraper {
+var Scraper = class {
   constructor(browser) {
     this.browser = browser;
   }
@@ -131,8 +132,7 @@ Price: ${price}`);
     await this.page.reload();
     await this.delay(2);
   }
-}
+};
 export {
   Scraper as default
 };
-//# sourceMappingURL=scraper.js.map
