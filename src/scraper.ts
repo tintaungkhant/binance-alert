@@ -1,5 +1,7 @@
-import puppeteer, { Browser as PuppeteerBrowser } from "puppeteer"
-
+import { Browser as PuppeteerBrowser } from "puppeteer"
+import * as dotenv from "dotenv";
+import axios from "axios";
+dotenv.config();
 export default class Scraper {
     constructor(private browser: PuppeteerBrowser) {
 
@@ -11,43 +13,86 @@ export default class Scraper {
 
             await page.goto("https://p2p.binance.com/trade/all-payments/USDT?fiat=AED");
 
-            this.delay(2);
+            console.log("Page loaded");
 
-            let aa = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[1]/div[2]/div/div/div[1]');
-            let bb = await page.$(aa);
+            console.log("Selecting currency");
 
-            if(bb){
-                await bb.hover();
+            await this.delay(1);
+
+            let currency_input_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[1]/div[2]/div/div/div[1]');
+            let currency_input = await page.$(currency_input_xp);
+
+            if (!currency_input) {
+                console.log("Currency input not found");
+                return;
             }
 
-            let cc = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[1]/div[2]/div/div/div[2]/div/div/div[2]/div');
+            console.log("Hovering over currency input");
 
-            let dd = await page.$$(cc);
+            await currency_input.hover();
 
-            let ee = Array.from(dd);
+            let currency_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[1]/div[2]/div/div/div[2]/div/div/div[2]/div');
 
-            for (let i = 0; i < ee.length; i++) {
-                let ff = await page.evaluate((el) => el.textContent, ee[i]);
+            let currency_buttons = Array.from(await page.$$(currency_xp));
 
-                ff = ff ? ff.trim() : "";
+            if (!currency_buttons.length) {
+                console.log("Currency buttons not found");
+                return;
+            }
 
-                if (ff === "MMK") {
-                    console.log("hi")
-                    await ee[i].click();
+            console.log("Clicking currency button");
+
+            let clicked_currency = false;
+
+            for (let i = 0; i < currency_buttons.length; i++) {
+                let currency_button = await page.evaluate((el) => el.textContent, currency_buttons[i]);
+
+                currency_button = currency_button ? currency_button.trim() : "";
+
+                if (currency_button === "MMK") {
+                    await currency_buttons[i].click();
+
+                    clicked_currency = true;
                     break;
                 }
             }
 
+            if (!clicked_currency) {
+                console.log("Currency not found");
+                return;
+            }
+
+            console.log("Currency selected");
+
             await this.delay(2);
 
-            let xpath = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[3]/div/div[1]/div[1]/div[2]/div[1]/div/div[1]');
+            console.log("Selecting first item");
 
-            let firstItem = await page.$(xpath);
+            let first_item_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[3]/div/div[1]/div[1]/div[2]/div[1]/div/div[1]');
 
-            if (firstItem) {
-                let price = await page.evaluate((el) => el.textContent, firstItem);
+            let first_item = await page.$(first_item_xp);
 
-                console.log(price);
+            if (!first_item) {
+                console.log("First item not found");
+                return;
+            }
+
+            console.log("Selected first item");
+
+            let price = await page.evaluate((el) => el.textContent, first_item);
+
+            if (price) {
+                const regex = /[^0-9]/g;
+                price = price.replace(regex, "");
+
+                let buy_price_threshold = process.env.BUY_PRICE_THRESHOLD;
+                buy_price_threshold = buy_price_threshold ? buy_price_threshold : "0";
+
+                console.info("Price: " + price);
+
+                if (price <= buy_price_threshold) {
+                    await this.sendToTelegram(price);
+                }
             }
 
             await page.close();
@@ -67,6 +112,21 @@ export default class Scraper {
     async delay(seconds: number) {
         return new Promise((resolve) => {
             setTimeout(resolve, seconds * 1000);
+        });
+    }
+
+    async sendToTelegram(price: string) {
+        let token = process.env.TELEGRAM_BOT_TOKEN;
+
+        let url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+        let params = {
+            chat_id: process.env.TELEGRAM_GROUP_ID,
+            text: `Price: ${price}`
+        };
+
+        await axios.get(url, {
+            params
         });
     }
 }
