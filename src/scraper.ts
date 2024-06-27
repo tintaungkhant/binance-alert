@@ -4,6 +4,7 @@ import axios from "axios";
 import fs from "fs";
 import { getCache, setCache } from "./helpers";
 dotenv.config();
+
 export default class Scraper {
     page!: Page
     constructor(private browser: PuppeteerBrowser) {
@@ -144,7 +145,11 @@ export default class Scraper {
     async sendToTelegram(text: string) {
         let token = process.env.TELEGRAM_BOT_TOKEN;
 
-        let url = `https://api.telegram.org/bot${token}/sendMessage`;
+        // let url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+        let url = "https://api.telegram.org/bot" + token + "/sendMessage";
+
+        // url = "https://jsonplaceholder.typicode.com/todos/1"
 
         console.log(url);
 
@@ -155,7 +160,15 @@ export default class Scraper {
             text
         };
 
-        await axios.get(url, { params });
+        await axios.get(url, {
+            params,
+            headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0' },
+            proxy: {
+                protocol: 'http',
+                host: 'squid',
+                port: 3128
+            }
+        });
     }
 
     async storeSiteSettings() {

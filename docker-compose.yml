@@ -1,13 +1,19 @@
 services:
+  squid:
+    image: ubuntu/squid
+    ports:
+      - "3128:3128"
+    volumes:
+      - ./volumes/squid.conf:/etc/squid/squid.conf
+
   scraper:
     build:
       context: .
-    network_mode: host
     depends_on:
+      - squid
       - redis
 
   redis:
     image: "redis:alpine"
     volumes:
-      - ./volumes/redisdata:/data
-    network_mode: host
+      - ./volumes/redisdata:/data\

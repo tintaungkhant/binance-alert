@@ -192,14 +192,22 @@ Price: ${price}`);
   }
   async sendToTelegram(text) {
     let token = process.env.TELEGRAM_BOT_TOKEN;
-    let url2 = `https://api.telegram.org/bot${token}/sendMessage`;
+    let url2 = "https://api.telegram.org/bot" + token + "/sendMessage";
     console.log(url2);
     let group_id = process.env.TELEGRAM_GROUP_ID;
     let params = {
       chat_id: group_id ? group_id : "",
       text
     };
-    await axios.get(url2, { params });
+    await axios.get(url2, {
+      params,
+      headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0" },
+      proxy: {
+        protocol: "http",
+        host: "squid",
+        port: 3128
+      }
+    });
   }
   async storeSiteSettings() {
     let cookies = await this.page.cookies();
