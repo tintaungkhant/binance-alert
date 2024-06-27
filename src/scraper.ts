@@ -152,7 +152,8 @@ export default class Scraper {
         };
 
         await axios.get(url, {
-            params
+            params,
+            timeout: 10000
         });
     }
 
