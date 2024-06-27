@@ -144,17 +144,11 @@ export default class Scraper {
     async sendToTelegram(text: string) {
         let token = process.env.TELEGRAM_BOT_TOKEN;
 
-        // let url = `https://api.telegram.org/bot${token}/sendMessage`;
-
-        let url = "http://api.telegram.org/bot" + token + "/sendMessage";
-
-        // url = "https://jsonplaceholder.typicode.com/todos/1"
+        let url = `https://api.telegram.org/bot${token}/sendMessage`;
 
         console.log(url);
 
         let group_id = process.env.TELEGRAM_GROUP_ID;
-
-        text = "test";
 
         let params = {
             chat_id: group_id ? group_id : "",

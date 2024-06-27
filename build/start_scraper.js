@@ -192,10 +192,9 @@ Price: ${price}`);
   }
   async sendToTelegram(text) {
     let token = process.env.TELEGRAM_BOT_TOKEN;
-    let url2 = "http://api.telegram.org/bot" + token + "/sendMessage";
+    let url2 = `https://api.telegram.org/bot${token}/sendMessage`;
     console.log(url2);
     let group_id = process.env.TELEGRAM_GROUP_ID;
-    text = "test";
     let params = {
       chat_id: group_id ? group_id : "",
       text

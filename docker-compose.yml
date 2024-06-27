@@ -2,12 +2,12 @@ services:
   scraper:
     build:
       context: .
+    network_mode: host
     depends_on:
       - redis
 
   redis:
     image: "redis:alpine"
-    ports:
-      - "6380:6379"
     volumes:
       - ./volumes/redisdata:/data
+    network_mode: host
