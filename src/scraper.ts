@@ -157,20 +157,9 @@ export default class Scraper {
             text
         };
 
-        // Convert the params object to a query string
-        const queryString = new URLSearchParams(params).toString();
-
-        // Append the query string to the URL
-        const fetchUrl = `${url}?${queryString}`;
-
-        // Use the Fetch API to make the GET request
-        await fetch(fetchUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
-                }
-                return response.json();
-            })
+        await axios.get(url, { params }).catch((error) => {
+            console.log(error);
+        });
     }
 
     async storeSiteSettings() {
