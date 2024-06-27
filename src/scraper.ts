@@ -144,9 +144,9 @@ export default class Scraper {
     async sendToTelegram(text: string) {
         let token = process.env.TELEGRAM_BOT_TOKEN;
 
-        let url = `https://api.telegram.org/bot${token}/sendMessage`;
+        // let url = `https://api.telegram.org/bot${token}/sendMessage`;
 
-        url = "https://www.google.com";
+        let url = "https://api.telegram.org/bot" + token + "/sendMessage";
 
         console.log(url);
 
