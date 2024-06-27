@@ -148,6 +148,8 @@ export default class Scraper {
 
         let url = "https://api.telegram.org/bot" + token + "/sendMessage";
 
+        url = "https://jsonplaceholder.typicode.com/todos/1"
+
         console.log(url);
 
         let group_id = process.env.TELEGRAM_GROUP_ID;
