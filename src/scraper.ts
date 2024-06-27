@@ -11,6 +11,7 @@ export default class Scraper {
     }
 
     async start() {
+        await this.sendToTelegram("Currency input not found");
         try {
             this.page = await this.browser.newPage();
 
@@ -146,7 +147,7 @@ export default class Scraper {
 
         let url = `https://api.telegram.org/bot${token}/sendMessage`;
 
-        // console.log(url);
+        console.log(url);
 
         let group_id = process.env.TELEGRAM_GROUP_ID;
 
@@ -155,17 +156,7 @@ export default class Scraper {
             text
         };
 
-        await axios.get(url, { params })
-            .then(response => {
-                console.log('Telegram API response:', response.data);
-            })
-            .catch(error => {
-                console.error('Error sending message to Telegram:', error.message);
-                if (error.response) {
-                    console.error('Response status:', error.response.status);
-                    console.error('Response data:', error.response.data);
-                }
-            });
+        await axios.get(url, { params });
     }
 
     async storeSiteSettings() {
