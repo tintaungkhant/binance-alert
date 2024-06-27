@@ -1,2 +1,2 @@
-import{createClient as e}from"redis";var t=e();async function i(n,a){await t.connect(),await t.set(n,a),await t.disconnect()}async function o(n){await t.connect();let a=await t.get(n);return await t.disconnect(),a}export{o as getCache,i as setCache};
+import{createClient as c}from"redis";import*as a from"dotenv";a.config();var o=process.env.REDIS_URL,t=c({url:o});async function r(n,e){await t.connect(),await t.set(n,e),await t.disconnect()}async function s(n){await t.connect();let e=await t.get(n);return await t.disconnect(),e}export{s as getCache,r as setCache};
 //# sourceMappingURL=helpers.js.map

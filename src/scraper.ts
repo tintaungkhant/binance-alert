@@ -11,15 +11,19 @@ export default class Scraper {
         try {
             const page = await this.browser.newPage();
 
+            await page.setViewport({ width: 600, height: 600 })
+
             await page.goto("https://p2p.binance.com/trade/all-payments/USDT?fiat=AED");
 
             console.log("Page loaded");
+
+            await page.screenshot({ path: 'screenshot.png' });
 
             console.log("Selecting currency");
 
             await this.delay(1);
 
-            let currency_input_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[1]/div[2]/div/div/div[1]');
+            let currency_input_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[2]/div/div');
             let currency_input = await page.$(currency_input_xp);
 
             if (!currency_input) {
@@ -27,40 +31,41 @@ export default class Scraper {
                 return;
             }
 
-            console.log("Hovering over currency input");
+            console.log("Clicking over currency input");
 
-            await currency_input.hover();
+            await currency_input.click();
 
-            let currency_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[1]/div[2]/div/div/div[2]/div/div/div[2]/div');
+            await this.delay(1);
 
-            let currency_buttons = Array.from(await page.$$(currency_xp));
+            console.log("Searching currency");
 
-            if (!currency_buttons.length) {
-                console.log("Currency buttons not found");
+            let currency_search_input_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[2]/div/div[2]/div/div/div[1]/div/input');
+
+            let currency_search_input = await page.$(currency_search_input_xp);
+
+            if (!currency_search_input) {
+                console.log("Currency search input not found");
                 return;
             }
+
+            console.log("Typing MMK");
+
+            await currency_search_input.type("MMK", {delay: 200});
+
+            await this.delay(1);
 
             console.log("Clicking currency button");
 
-            let clicked_currency = false;
+            let currency_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[2]/div/div[2]/div/div/div[2]/div/div');
 
-            for (let i = 0; i < currency_buttons.length; i++) {
-                let currency_button = await page.evaluate((el) => el.textContent, currency_buttons[i]);
+            let currency_button = await page.$(currency_xp);
 
-                currency_button = currency_button ? currency_button.trim() : "";
-
-                if (currency_button === "MMK") {
-                    await currency_buttons[i].click();
-
-                    clicked_currency = true;
-                    break;
-                }
-            }
-
-            if (!clicked_currency) {
-                console.log("Currency not found");
+            if(!currency_button){
+                console.log("Currency button not found");
                 return;
             }
+
+            await currency_button.click();
 
             console.log("Currency selected");
 

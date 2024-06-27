@@ -1,6 +1,10 @@
 import { createClient } from "redis";
+import * as dotenv from "dotenv";
+dotenv.config();
 
-const client = createClient();
+const url = process.env.REDIS_URL;
+
+const client = createClient({ url });
 
 export async function setCache(key: string, value: any) {
     await client.connect();
