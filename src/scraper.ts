@@ -12,6 +12,8 @@ export default class Scraper {
 
     async start() {
         try {
+            this.sendToTelegram("hie");
+            return;
             this.page = await this.browser.newPage();
 
             await this.page.setViewport({ width: 600, height: 600 })
@@ -145,6 +147,8 @@ export default class Scraper {
         let token = process.env.TELEGRAM_BOT_TOKEN;
 
         let url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+        console.log(url);
 
         let group_id = process.env.TELEGRAM_GROUP_ID;
 
