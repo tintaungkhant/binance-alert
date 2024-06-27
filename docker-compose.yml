@@ -1,9 +1,11 @@
 services:
-  web:
+  scraper:
     build:
       context: .
     depends_on:
       - redis
+    networks:
+      - app-network
 
   redis:
     image: "redis:alpine"
@@ -11,3 +13,9 @@ services:
       - "6380:6379"
     volumes:
       - ./volumes/redisdata:/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
