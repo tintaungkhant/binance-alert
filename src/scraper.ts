@@ -35,6 +35,9 @@ export default class Scraper {
 
             if (!currency_input) {
                 console.log("Currency input not found");
+                
+                await this.sendToTelegram("Currency input not found")
+
                 return;
             }
 
@@ -52,6 +55,8 @@ export default class Scraper {
 
             if (!currency_search_input) {
                 console.log("Currency search input not found");
+
+                await this.sendToTelegram("Currency search input not found");
                 return;
             }
 
@@ -69,6 +74,8 @@ export default class Scraper {
 
             if (!currency_button) {
                 console.log("Currency button not found");
+
+                await this.sendToTelegram("Currency search input not found");
                 return;
             }
 
@@ -86,6 +93,8 @@ export default class Scraper {
 
             if (!first_item) {
                 console.log("First item not found");
+
+                await this.sendToTelegram("Currency search input not found");
                 return;
             }
 
@@ -104,7 +113,7 @@ export default class Scraper {
                 console.info("Price: " + price);
 
                 if (price <= buy_price_threshold) {
-                    await this.sendToTelegram(buy_price_threshold, price);
+                    await this.sendBuyPriceAlert(buy_price_threshold, price);
                 }
             }
 
@@ -128,14 +137,18 @@ export default class Scraper {
         });
     }
 
-    async sendToTelegram(buy_price_threshold: string, price: string) {
+    async sendBuyPriceAlert(buy_price_threshold: string, price: string) {
+        await this.sendToTelegram(`Price is below threshold\nThreshold: ${buy_price_threshold}\nPrice: ${price}`);
+    }
+
+    async sendToTelegram(text: string) {
         let token = process.env.TELEGRAM_BOT_TOKEN;
 
         let url = `https://api.telegram.org/bot${token}/sendMessage`;
 
         let params = {
             chat_id: process.env.TELEGRAM_GROUP_ID,
-            text: `Price is below threshold\nThreshold: ${buy_price_threshold}\nPrice: ${price}`
+            text
         };
 
         await axios.get(url, {

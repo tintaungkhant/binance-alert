@@ -1,4 +1,6 @@
 /node_modules
 /user_data
 /site-settings
+/volumes
 .env
+.env.docker
