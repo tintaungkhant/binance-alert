@@ -35,7 +35,7 @@ export default class Scraper {
 
             if (!currency_input) {
                 console.log("Currency input not found");
-                
+
                 await this.sendToTelegram("Currency input not found")
 
                 return;
@@ -109,7 +109,7 @@ export default class Scraper {
                 let buy_price_threshold = process.env.BUY_PRICE_THRESHOLD;
                 buy_price_threshold = buy_price_threshold ? buy_price_threshold : "0";
 
-                console.info("Price threshold "  + buy_price_threshold);
+                console.info("Price threshold " + buy_price_threshold);
                 console.info("Price: " + price);
 
                 if (price <= buy_price_threshold) {
@@ -146,20 +146,32 @@ export default class Scraper {
 
         let url = `https://api.telegram.org/bot${token}/sendMessage`;
 
+        let group_id = process.env.TELEGRAM_GROUP_ID;
+
         let params = {
-            chat_id: process.env.TELEGRAM_GROUP_ID,
+            chat_id: group_id ? group_id : "",
             text
         };
 
-        await axios.get(url, {
-            params,
-            timeout: 10000
-        });
+        // Convert the params object to a query string
+        const queryString = new URLSearchParams(params).toString();
+
+        // Append the query string to the URL
+        const fetchUrl = `${url}?${queryString}`;
+
+        // Use the Fetch API to make the GET request
+        await fetch(fetchUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
     }
 
     async storeSiteSettings() {
         let cookies = await this.page.cookies();
-        
+
         fs.writeFileSync("site-settings/cookies.json", JSON.stringify(cookies, null, 2));
 
         let local_storage = await this.page.evaluate(() => {
@@ -167,7 +179,7 @@ export default class Scraper {
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
 
-                if(!key) continue;
+                if (!key) continue;
 
                 json[key] = localStorage.getItem(key);
             }
