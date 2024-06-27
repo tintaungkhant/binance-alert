@@ -11,8 +11,8 @@ import esbuild from "esbuild";
      */
     const options = {
         entryPoints: getFilesSync("src"),
-        bundle: true,
-        minify: true,
+        bundle: false,
+        minify: false,
         sourcemap: true,
         target: "node18",
         packages: "external",
