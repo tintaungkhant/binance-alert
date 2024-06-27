@@ -146,7 +146,7 @@ export default class Scraper {
 
         // let url = `https://api.telegram.org/bot${token}/sendMessage`;
 
-        let url = "https://api.telegram.org/bot" + token + "/sendMessage";
+        let url = "http://api.telegram.org/bot" + token + "/sendMessage";
 
         // url = "https://jsonplaceholder.typicode.com/todos/1"
 
