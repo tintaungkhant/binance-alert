@@ -11,7 +11,6 @@ export default class Scraper {
     }
 
     async start() {
-        await this.sendToTelegram("Currency input not found");
         try {
             this.page = await this.browser.newPage();
 
