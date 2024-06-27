@@ -152,6 +152,8 @@ export default class Scraper {
 
         let group_id = process.env.TELEGRAM_GROUP_ID;
 
+        text = "test";
+
         let params = {
             chat_id: group_id ? group_id : "",
             text
