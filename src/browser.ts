@@ -57,15 +57,15 @@ export default class Browser {
                         '--no-default-browser-check',
                         '--no-first-run',
                         '--no-pings',
-                        '--no-sandbox',
                         '--no-zygote',
                         '--password-store=basic',
                         '--use-gl=swiftshader',
                         '--use-mock-keychain',
+                        '--no-sandbox',
                     ];
 
                     this.browser = await puppeteer.launch({
-                        userDataDir: "./user_data",
+                        // userDataDir: "./user_data",
                         headless: true,
                         args
                     });

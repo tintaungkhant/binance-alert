@@ -13,7 +13,7 @@ var locked = false;
 
         await run();
     
-        // locked = false;
+        locked = false;
     }, 5000);
 })();
 
