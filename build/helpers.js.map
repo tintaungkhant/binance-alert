@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/helpers.ts"],
+  "sourcesContent": ["import { createClient } from \"redis\";\n\nconst client = createClient();\n\nexport async function setCache(key: string, value: any) {\n    await client.connect();\n\n    await client.set(key, value);\n\n    await client.disconnect();\n}\n\nexport async function getCache(key: string) {\n    await client.connect();\n\n    let value = await client.get(key);\n\n    await client.disconnect();\n\n    return value;\n}"],
+  "mappings": "AAAA,OAAS,gBAAAA,MAAoB,QAE7B,IAAMC,EAASD,EAAa,EAE5B,eAAsBE,EAASC,EAAaC,EAAY,CACpD,MAAMH,EAAO,QAAQ,EAErB,MAAMA,EAAO,IAAIE,EAAKC,CAAK,EAE3B,MAAMH,EAAO,WAAW,CAC5B,CAEA,eAAsBI,EAASF,EAAa,CACxC,MAAMF,EAAO,QAAQ,EAErB,IAAIG,EAAQ,MAAMH,EAAO,IAAIE,CAAG,EAEhC,aAAMF,EAAO,WAAW,EAEjBG,CACX",
+  "names": ["createClient", "client", "setCache", "key", "value", "getCache"]
+}
