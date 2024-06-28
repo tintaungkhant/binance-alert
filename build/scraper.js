@@ -4,20 +4,26 @@ import axios from "axios";
 import fs from "fs";
 dotenv.config();
 var Scraper = class {
-  constructor(browser) {
+  constructor(browser, agent) {
     this.browser = browser;
+    this.agent = agent;
   }
   page;
+  agent;
   async start() {
     try {
       this.page = await this.browser.newPage();
       await this.page.setViewport({ width: 600, height: 600 });
-      await this.page.goto("https://p2p.binance.com/trade/all-payments/USDT?fiat=AED");
+      await this.page.goto(
+        "https://p2p.binance.com/trade/all-payments/USDT?fiat=AED"
+      );
       console.log("Page loaded");
       await this.setUpSiteSettings();
       console.log("Selecting currency");
       await this.delay(1);
-      let currency_input_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[2]/div/div');
+      let currency_input_xp = this.xpath(
+        '//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[2]/div/div'
+      );
       let currency_input = await this.page.$(currency_input_xp);
       if (!currency_input) {
         console.log("Currency input not found");
@@ -28,7 +34,9 @@ var Scraper = class {
       await currency_input.click();
       await this.delay(1);
       console.log("Searching currency");
-      let currency_search_input_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[2]/div/div[2]/div/div/div[1]/div/input');
+      let currency_search_input_xp = this.xpath(
+        '//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[2]/div/div[2]/div/div/div[1]/div/input'
+      );
       let currency_search_input = await this.page.$(currency_search_input_xp);
       if (!currency_search_input) {
         console.log("Currency search input not found");
@@ -39,7 +47,9 @@ var Scraper = class {
       await currency_search_input.type("MMK", { delay: 200 });
       await this.delay(1);
       console.log("Clicking currency button");
-      let currency_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[2]/div/div[2]/div/div/div[2]/div/div');
+      let currency_xp = this.xpath(
+        '//*[@id="__APP"]/div/div[2]/main/div[2]/div[1]/div/div[2]/div[2]/div/div[2]/div/div/div[2]/div/div'
+      );
       let currency_button = await this.page.$(currency_xp);
       if (!currency_button) {
         console.log("Currency button not found");
@@ -50,7 +60,9 @@ var Scraper = class {
       console.log("Currency selected");
       await this.delay(2);
       console.log("Selecting first item");
-      let first_item_xp = this.xpath('//*[@id="__APP"]/div/div[2]/main/div[2]/div[3]/div/div[1]/div[1]/div[2]/div[1]/div/div[1]');
+      let first_item_xp = this.xpath(
+        '//*[@id="__APP"]/div/div[2]/main/div[2]/div[3]/div/div[1]/div[1]/div[2]/div[1]/div/div[1]'
+      );
       let first_item = await this.page.$(first_item_xp);
       if (!first_item) {
         console.log("First item not found");
@@ -86,9 +98,11 @@ var Scraper = class {
     });
   }
   async sendBuyPriceAlert(buy_price_threshold, price) {
-    await this.sendToTelegram(`Price is below threshold
+    await this.sendToTelegram(
+      `Price is below threshold
 Threshold: ${buy_price_threshold}
-Price: ${price}`);
+Price: ${price}`
+    );
   }
   async sendToTelegram(text) {
     let token = process.env.TELEGRAM_BOT_TOKEN;
@@ -101,17 +115,23 @@ Price: ${price}`);
     };
     await axios.get(url, {
       params,
-      headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0" },
-      proxy: {
-        protocol: "http",
-        host: "squid",
-        port: 3128
-      }
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0"
+      },
+      httpsAgent: this.agent
+      // proxy: {
+      //     protocol: 'http',
+      //     host: 'squid',
+      //     port: 3128
+      // }
     });
   }
   async storeSiteSettings() {
     let cookies = await this.page.cookies();
-    fs.writeFileSync("site-settings/cookies.json", JSON.stringify(cookies, null, 2));
+    fs.writeFileSync(
+      "site-settings/cookies.json",
+      JSON.stringify(cookies, null, 2)
+    );
     let local_storage = await this.page.evaluate(() => {
       let json = {};
       for (let i = 0; i < localStorage.length; i++) {
@@ -121,14 +141,20 @@ Price: ${price}`);
       }
       return json;
     });
-    fs.writeFileSync("site-settings/local_storage.json", JSON.stringify(local_storage, null, 2));
+    fs.writeFileSync(
+      "site-settings/local_storage.json",
+      JSON.stringify(local_storage, null, 2)
+    );
   }
   async setUpSiteSettings() {
     let cookies = fs.readFileSync("site-settings/cookies.json", "utf-8");
     if (cookies) {
       await this.page.setCookie(...JSON.parse(cookies));
     }
-    let local_storage = fs.readFileSync("site-settings/local_storage.json", "utf-8");
+    let local_storage = fs.readFileSync(
+      "site-settings/local_storage.json",
+      "utf-8"
+    );
     if (local_storage) {
       await this.page.evaluate((local_storage2) => {
         for (let key in local_storage2) {

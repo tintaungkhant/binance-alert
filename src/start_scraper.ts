@@ -1,32 +1,36 @@
 import Browser from "./browser";
 import Scraper from "./scraper";
+import https from "https";
 
 var locked = false;
 
 (async () => {
-    setInterval(async () => {
-        if (locked) {
-            return;
-        }
+  const agent = new https.Agent({
+    keepAlive: true,
+  });
 
-        locked = true;
-
-        await run();
-    
-        locked = false;
-    }, 5000);
-})();
-
-
-async function run() {
-    const browser = await(new Browser).create();
-
-    if (!browser) {
-        console.log("Browser not created");
-        return;
+  setInterval(async () => {
+    if (locked) {
+      return;
     }
 
-    const scraper = new Scraper(browser);
+    locked = true;
 
-    await scraper.start();
-};
+    await run(agent);
+
+    locked = false;
+  }, 5000);
+})();
+
+async function run(agent: https.Agent) {
+  const browser = await new Browser().create();
+
+  if (!browser) {
+    console.log("Browser not created");
+    return;
+  }
+
+  const scraper = new Scraper(browser, agent);
+
+  await scraper.start();
+}

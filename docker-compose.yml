@@ -1,16 +1,8 @@
 services:
-  squid:
-    image: ubuntu/squid
-    ports:
-      - "3128:3128"
-    volumes:
-      - ./volumes/squid.conf:/etc/squid/squid.conf
-
   scraper:
     build:
       context: .
     depends_on:
-      - squid
       - redis
 
   redis:
