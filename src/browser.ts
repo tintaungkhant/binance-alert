@@ -66,8 +66,8 @@ export default class Browser {
 
                     this.browser = await puppeteer.launch({
                         // userDataDir: "./user_data",
-                        headless: false,
-                        // args
+                        headless: true,
+                        args
                     });
 
                     wsEndpoint = this.browser.wsEndpoint();
