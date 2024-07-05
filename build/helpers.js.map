@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../src/helpers.ts"],
-  "sourcesContent": ["import { createClient } from \"redis\";\nimport * as dotenv from \"dotenv\";\ndotenv.config();\n\nconst url = process.env.REDIS_URL;\n\nconst client = createClient({ url });\n\nexport async function setCache(key: string, value: any) {\n    await client.connect();\n\n    await client.set(key, value);\n\n    await client.disconnect();\n}\n\nexport async function getCache(key: string) {\n    await client.connect();\n\n    let value = await client.get(key);\n\n    await client.disconnect();\n\n    return value;\n}"],
-  "mappings": "AAAA,SAAS,oBAAoB;AAC7B,YAAY,YAAY;AACxB,OAAO,OAAO;AAEd,MAAM,MAAM,QAAQ,IAAI;AAExB,MAAM,SAAS,aAAa,EAAE,IAAI,CAAC;AAEnC,eAAsB,SAAS,KAAa,OAAY;AACpD,QAAM,OAAO,QAAQ;AAErB,QAAM,OAAO,IAAI,KAAK,KAAK;AAE3B,QAAM,OAAO,WAAW;AAC5B;AAEA,eAAsB,SAAS,KAAa;AACxC,QAAM,OAAO,QAAQ;AAErB,MAAI,QAAQ,MAAM,OAAO,IAAI,GAAG;AAEhC,QAAM,OAAO,WAAW;AAExB,SAAO;AACX;",
-  "names": []
-}

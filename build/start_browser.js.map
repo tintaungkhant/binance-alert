@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../src/start_browser.ts"],
-  "sourcesContent": ["import Browser from \"./browser\";\n\n(async function(){\n    const browser = new Browser;\n\n    await browser.create();\n})();"],
-  "mappings": "AAAA,OAAO,aAAa;AAAA,CAEnB,iBAAgB;AACb,QAAM,UAAU,IAAI;AAEpB,QAAM,QAAQ,OAAO;AACzB,GAAG;",
-  "names": []
-}

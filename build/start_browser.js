@@ -77,8 +77,8 @@ var Browser = class {
           ];
           this.browser = await puppeteer.launch({
             // userDataDir: "./user_data",
-            headless: true,
-            args
+            headless: false
+            // args
           });
           wsEndpoint = this.browser.wsEndpoint();
           await setCache("wsEndpoint", wsEndpoint);

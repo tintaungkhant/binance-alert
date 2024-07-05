@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../src/start_scraper.ts"],
-  "sourcesContent": ["import Browser from \"./browser\";\nimport Scraper from \"./scraper\";\n\nvar locked = false;\n\n(async () => {\n    setInterval(async () => {\n        if (locked) {\n            return;\n        }\n\n        locked = true;\n\n        await run();\n    \n        locked = false;\n    }, 5000);\n})();\n\n\nasync function run() {\n    const browser = await(new Browser).create();\n\n    if (!browser) {\n        console.log(\"Browser not created\");\n        return;\n    }\n\n    const scraper = new Scraper(browser);\n\n    await scraper.start();\n};"],
-  "mappings": "AAAA,OAAO,aAAa;AACpB,OAAO,aAAa;AAEpB,IAAI,SAAS;AAAA,CAEZ,YAAY;AACT,cAAY,YAAY;AACpB,QAAI,QAAQ;AACR;AAAA,IACJ;AAEA,aAAS;AAET,UAAM,IAAI;AAEV,aAAS;AAAA,EACb,GAAG,GAAI;AACX,GAAG;AAGH,eAAe,MAAM;AACjB,QAAM,UAAU,MAAM,IAAI,UAAS,OAAO;AAE1C,MAAI,CAAC,SAAS;AACV,YAAQ,IAAI,qBAAqB;AACjC;AAAA,EACJ;AAEA,QAAM,UAAU,IAAI,QAAQ,OAAO;AAEnC,QAAM,QAAQ,MAAM;AACxB;AAAC;",
-  "names": []
-}
