@@ -127,7 +127,6 @@ var Scraper = class {
       let currency_input = await this.page.$(currency_input_xp);
       if (!currency_input) {
         console.log("Currency input not found");
-        await this.sendToTelegram("Currency input not found");
         return;
       }
       console.log("Clicking over currency input");
@@ -140,7 +139,6 @@ var Scraper = class {
       let currency_search_input = await this.page.$(currency_search_input_xp);
       if (!currency_search_input) {
         console.log("Currency search input not found");
-        await this.sendToTelegram("Currency search input not found");
         return;
       }
       console.log("Typing MMK");
@@ -153,7 +151,6 @@ var Scraper = class {
       let currency_button = await this.page.$(currency_xp);
       if (!currency_button) {
         console.log("Currency button not found");
-        await this.sendToTelegram("Currency search input not found");
         return;
       }
       await currency_button.click();
@@ -166,7 +163,6 @@ var Scraper = class {
       let first_item = await this.page.$(first_item_xp);
       if (!first_item) {
         console.log("First item not found");
-        await this.sendToTelegram("Currency search input not found");
         return;
       }
       console.log("Selected first item");

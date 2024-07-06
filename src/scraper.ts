@@ -43,7 +43,7 @@ export default class Scraper {
       if (!currency_input) {
         console.log("Currency input not found");
 
-        await this.sendToTelegram("Currency input not found");
+        // await this.sendToTelegram("Currency input not found");
 
         return;
       }
@@ -65,7 +65,7 @@ export default class Scraper {
       if (!currency_search_input) {
         console.log("Currency search input not found");
 
-        await this.sendToTelegram("Currency search input not found");
+        // await this.sendToTelegram("Currency search input not found");
         return;
       }
 
@@ -86,7 +86,7 @@ export default class Scraper {
       if (!currency_button) {
         console.log("Currency button not found");
 
-        await this.sendToTelegram("Currency search input not found");
+        // await this.sendToTelegram("Currency button not found");
         return;
       }
 
@@ -107,7 +107,7 @@ export default class Scraper {
       if (!first_item) {
         console.log("First item not found");
 
-        await this.sendToTelegram("Currency search input not found");
+        // await this.sendToTelegram("First item not found");
         return;
       }
 
